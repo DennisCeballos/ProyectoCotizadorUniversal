@@ -1,6 +1,7 @@
 # views/main_view.py
 import tkinter as tk
 from tkinter import ttk, Button, Canvas
+from models.Utils import SearchableComboBox
 
 class MainView(tk.Tk):
     def __init__(self):
@@ -20,8 +21,12 @@ class MainView(tk.Tk):
             relief = "ridge"
         )
         self.canvas.place(x=0, y=0)
+
+        options = ["Apple", "Banana", "Cherry", "Date", "Grapes", "Kiwi", "Mango", "Orange", "Peach", "Pear"]
+
+        self.combo = SearchableComboBox(self, options)
+        self.combo.place(y=30, x=20)
         
-        '''
         self.canvas.create_rectangle(
             40.0,
             130.0,
@@ -29,7 +34,6 @@ class MainView(tk.Tk):
             330.0,
             fill="#FFFFFF",
             outline="")
-        '''
 
         self.eleccion = tk.StringVar()
         self.ComboBoxProducto = ttk.Combobox(width=40, height=30, textvariable=self.eleccion)
