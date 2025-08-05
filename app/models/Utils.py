@@ -178,4 +178,4 @@ class Utils:
     
     @staticmethod
     def getPosibles_namePrecio():
-        return ["nombre", "descripcion", "presentacion"]
+        return ["precio", "costo", "coste"]
