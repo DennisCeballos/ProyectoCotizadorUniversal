@@ -1,9 +1,10 @@
 # presenters/cotizacion_presenter.py
 import pandas as pd
 import os
-from models.producto import Producto
+from models.Producto import Producto
 from models.FuenteData import FuenteDatos
 from views.cotizador_view import CotizadorView
+from models.Utils import Utils
 
 class CotizacionPresenter:
     def __init__(self, view: CotizadorView):
@@ -11,6 +12,7 @@ class CotizacionPresenter:
         self.opciones_productos = []
         self.productos_cotizacion = []
         self.lista_FuenteDatos:list[FuenteDatos] = []
+        self.dataframe = None
 
     def cargar_datos(self):
         #* Cargar pandas dataframe para cada fuente de datos *
@@ -28,31 +30,20 @@ class CotizacionPresenter:
         # Comprobar lista de dataframse
         print(f"Numero de FuenteDatos creados>{len(self.lista_FuenteDatos)}")
 
-        #* Generar la lista de productos para elegir
-        nombres_productos = []
-
-        for fuente in self.lista_FuenteDatos:
-            nombres_productos.extend(fuente.getColumnaProductos())
-        #! !! debug
-        nombres_productos = fuente.getColumnaProductos()
-
-        print(nombres_productos)
+        self.dataframe = pd.concat( [fuente.getDataframeProductos() for fuente in self.lista_FuenteDatos], ignore_index=True)
+        print(self.dataframe.head(5))
+        print(self.dataframe.size)
+        print(self.dataframe["origen"].describe())
 
         #
         #* Configurar las interacciones con los botones en la vista
         #
-
         self.view.set_buscar_callback(self.on_buscar)
-
 
     def on_buscar(self):
         # Generar la lista de opciones similares a la palabra a Buscar
         datos_mostrar: list[Producto] = []
         palabraBuscar = self.view.entryBuscador.get()
-
-        for fuente in self.lista_FuenteDatos:
-
-
 
 
     '''
