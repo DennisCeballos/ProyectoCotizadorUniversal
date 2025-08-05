@@ -3,20 +3,19 @@ import pandas as pd
 import os
 from models.producto import Producto
 from models.FuenteData import FuenteDatos
+from views.cotizador_view import CotizadorView
 
 class CotizacionPresenter:
-    def __init__(self, view):
+    def __init__(self, view: CotizadorView):
         self.view = view
-        self.productos = []
+        self.opciones_productos = []
+        self.productos_cotizacion = []
+        self.lista_FuenteDatos:list[FuenteDatos] = []
 
     def cargar_datos(self):
-        posibles_nombre = ["nombre", "descripcion", "presentacion"]
-        posibles_precio = ["precio", "costo"]
-        
         #* Cargar pandas dataframe para cada fuente de datos *
-        lista_FuenteDatos:list[FuenteDatos] = []
 
-        # obtener la lista de ARCHIVOS de tipo excel, etc 
+        # obtener la lista de ARCHIVOS de tipo excel
         current_path = str(os.getcwd())
         archivos = os.listdir(current_path)
         archivos = [f for f in archivos if os.path.isfile(current_path+'/'+f)]
@@ -24,40 +23,58 @@ class CotizacionPresenter:
 
         # bucle para generar los dataframes por cada archivo
         for nombre_archivo in archivos_excel:
-            lista_FuenteDatos.append( FuenteDatos(nombre_archivo) )
-            
-
+            self.lista_FuenteDatos.append( FuenteDatos(nombre_archivo) )
+        
         # Comprobar lista de dataframse
-        print(f"Numero de FuenteDatos creados>{len(lista_FuenteDatos)}")
+        print(f"Numero de FuenteDatos creados>{len(self.lista_FuenteDatos)}")
 
-        #* Generar la lista de nombres para el comboBox
+        #* Generar la lista de productos para elegir
         nombres_productos = []
 
-        for fuente in lista_FuenteDatos:
+        for fuente in self.lista_FuenteDatos:
             nombres_productos.extend(fuente.getColumnaProductos())
-        
+        #! !! debug
         nombres_productos = fuente.getColumnaProductos()
 
-        self.view.ComboBoxProducto['values'] = ["Hola", "El", "pepe"]
         print(nombres_productos)
-        self.view.ComboBoxProducto.current()
 
-        self.productos = [
-            Producto("Laptop HP", 2500, "Proveedor A"),
-            Producto("Laptop Lenovo", 2300, "Proveedor B")
-        ]
+        #
+        #* Configurar las interacciones con los botones en la vista
+        #
 
-        #self.mostrar_en_vista()
-
-    def mostrar_en_vista(self):
-        pass
-        '''
-        self.view.cotizacion_listbox.delete(0, 'end')
-        for p in self.productos:
-            self.view.cotizacion_listbox.insert('end', str(p))
-        '''
+        self.view.set_buscar_callback(self.on_buscar)
 
 
-if __name__ == "__main__":
-    presentarPrueba = CotizacionPresenter(None)
-    presentarPrueba.cargar_datos()
+    def on_buscar(self):
+        # Generar la lista de opciones similares a la palabra a Buscar
+        datos_mostrar: list[Producto] = []
+        palabraBuscar = self.view.entryBuscador.get()
+
+        for fuente in self.lista_FuenteDatos:
+
+
+
+
+    '''
+    def fuzzy_filter(self, query):
+        if not query:
+            return self.options[:15]
+
+        query = query.lower().strip()
+
+            # Optional: fallback to fast substring match for very short queries
+        if len(query) < 3:
+            return [opt for opt in self.options if query in opt.lower()][:15]
+
+        # Use rapidfuzz to get matches with similarity score
+        matches = process.extract(
+            query,
+            self.options,
+            scorer= fuzz.partial_token_set_ratio,  # good for word order variation
+            limit=10  # limit for performance
+        )
+
+        rpta = matches[:10]
+        print(rpta)
+        return [match for match, score, _ in rpta if score >= 50]
+    '''
