@@ -161,9 +161,21 @@ class CotizadorView(tk.Tk):
             x=40.0, y=745.0,
             width=200.0, height=30.0
         )
+        
+
+        #
+        # configuraciones extras
+        #
+        def entry_ctrl_bs(event):
+            ent = event.widget
+            end_idx = ent.index(tk.INSERT)
+            start_idx = ent.get().rfind(" ", None, end_idx)
+            ent.selection_range(start_idx, end_idx)
+        self.entryBuscador.bind('<Control-BackSpace>', entry_ctrl_bs)
 
     def set_buscar_callback(self, callback):
         self.btnBuscar.config(command=callback)
+        self.entryBuscador.bind('<Return>', lambda x: callback()) #hay un lambda x porque BIND siempre pasa un parametro "event" que no se requiere en la funcion callback (no tiene parametros)
     
     def set_agregar_callback(self, callback):
         self.btnAgregar.config(command=callback)
