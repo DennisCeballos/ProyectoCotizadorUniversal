@@ -7,7 +7,8 @@ class FuenteDatos:
     def __init__(self, _path):
         self.path = _path
         
-        self.nombre = self.path[:-5]
+        pos = self.path.rfind(".")
+        self.nombre = self.path[:pos] #obtiene el nombre sin la extension de archivo
         
         self.nameNombre_preferido = None
         self.namePrecio_preferido = None
@@ -27,8 +28,8 @@ class FuenteDatos:
             for palabra in row.array:
                 elementos_fila.append( str(palabra).lower() )
             
-            print("elementos_fila> ", end="")
-            print(elementos_fila)
+            #print("elementos_fila> ", end="")
+            #print(elementos_fila)
 
             #* se obtiene el name que utiliza este archivo para sus "nombres de productos" y para sus "precios de producto"
             self.nameNombre_preferido = [value for value in elementos_fila if value in posibles_nombre]
@@ -40,12 +41,11 @@ class FuenteDatos:
 
             # si son diferentes de nulos significa que sI existen
             if ( self.nameNombre_preferido ) and (self.namePrecio_preferido):
-                    print(f"ENCONTRE en {index}")
+                    #print(f"ENCONTRE en {index}")
                     self.df = pd.read_excel(self.path, header=index+1) # type: ignore
-                    print(self.df.head(5))
                     self.df.rename(columns=str.lower, inplace=True)
                     break
-        print(f"Numero de filas: {self.df.count()}")
+        #print(f"Numero de filas: {self.df.count()} de archivo {self.nombre}")
 
     def __repr__(self):
         return f"Archivo {self.nombre} - Ubicacion: {self.path}"
@@ -68,7 +68,6 @@ class FuenteDatos:
         if not self.nameNombre_preferido or not self.namePrecio_preferido:
             return None
         
-        print()
         df.rename(columns={self.nameNombre_preferido: "nombre", # type: ignore
                            self.namePrecio_preferido: "precio"}, # type: ignore
                   inplace=True) # type: ignore
