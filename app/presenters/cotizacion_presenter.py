@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import openpyxl
+from datetime import datetime
 import os
 import re
 from rapidfuzz import fuzz, process
@@ -43,6 +44,7 @@ class CotizacionPresenter:
         self.view.set_buscar_callback(self.on_buscar)
         self.view.set_agregar_callback(self.on_agregar)
         self.view.set_copiar_callback(self.on_copiarPortapapeles)
+        self.view.set_exportar_callback(self.on_exportarExcel)
 
     def on_buscar(self):
         #* Generar la lista de opciones similares a la palabra a Buscar
@@ -149,3 +151,37 @@ class CotizacionPresenter:
         self.view.clipboard_append(clipboard_data)
         self.view.update()  # mantiene el clipboard despues de salir del form
         print("Data de COtizacion guardada en el portapapeles")
+
+    def on_exportarExcel(self):
+        # crear un nuevo excel
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Data Cotizacion" # type: ignore
+
+        # obtener los datos de cabecera
+        headers = [self.view.tablaCotizaciones.heading(col)["text"] for col in self.view.tablaCotizaciones["columns"]]
+        ws.append(headers) # type: ignore
+
+        # agregar los datos de las filas
+        for item in self.view.tablaCotizaciones.get_children():
+            values = self.view.tablaCotizaciones.item(item)["values"]
+            ws.append(values) # type: ignore
+
+        # guardar en un archivo temporal
+        app_dir = os.getcwd()
+        # Generate formatted date-time string
+        hora_actual = datetime.now()
+        hora_formateado = hora_actual.strftime("Cotizacion Resumen_%d_%B_%y-%H_%M.xlsx")  # e.g., Cotizacion_07_August_25_14_45.xlsx
+        file_path = os.path.join(app_dir, hora_formateado)
+        wb.save(file_path)
+
+        # abrir el archivo con la aplicacion default
+        try:
+            if os.name == 'nt':  # Windows
+                os.startfile(file_path)
+            #elif os.name == 'posix':  # macOS or Linux
+            #    subprocess.call(('open' if sys.platform == 'darwin' else 'xdg-open', file_path))
+        except Exception as e:
+            print("Error. No se pudo abrir el archivo:", e)
+
+        print(f"Archivo exportado en {file_path}")
