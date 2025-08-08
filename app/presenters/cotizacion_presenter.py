@@ -40,6 +40,7 @@ class CotizacionPresenter:
         #* Configurar las interacciones con los botones en la vista
         #
         self.view.set_buscar_callback(self.on_buscar)
+        self.view.set_agregar_callback(self.on_agregar)
 
     def on_buscar(self):
         #* Generar la lista de opciones similares a la palabra a Buscar
@@ -109,3 +110,20 @@ class CotizacionPresenter:
         for index, row in df_combinado.iterrows():
             valor = (row["nombre"], row["precio"], row["origen"])
             self.view.tablaOpciones.insert("", index=0,values=valor)
+
+    def on_agregar(self):
+        # Verificar que se ha seleccionado alguna opcion
+        try:
+            seleccion = self.view.tablaOpciones.selection()[0]
+        except IndexError:
+             print("No se ha seleccionado ninguna opcion")
+             return
+        
+        # proceso necesario para obtener el valor como tal
+        seleccion = self.view.tablaOpciones.item(seleccion)
+        seleccion = seleccion.get("values")
+        print("Agregando: ")
+        print(seleccion)
+
+        #insertar los datos en la tabla final
+        self.view.tablaCotizaciones.insert("", 'end',values=seleccion) # type: ignore
