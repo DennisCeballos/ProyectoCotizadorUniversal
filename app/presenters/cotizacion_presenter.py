@@ -1,6 +1,7 @@
 # presenters/cotizacion_presenter.py
 import pandas as pd
 import numpy as np
+import openpyxl
 import os
 import re
 from rapidfuzz import fuzz, process
@@ -41,6 +42,7 @@ class CotizacionPresenter:
         #
         self.view.set_buscar_callback(self.on_buscar)
         self.view.set_agregar_callback(self.on_agregar)
+        self.view.set_copiar_callback(self.on_copiarPortapapeles)
 
     def on_buscar(self):
         #* Generar la lista de opciones similares a la palabra a Buscar
@@ -127,3 +129,23 @@ class CotizacionPresenter:
 
         #insertar los datos en la tabla final
         self.view.tablaCotizaciones.insert("", 'end',values=seleccion) # type: ignore
+
+    def on_copiarPortapapeles(self):
+        filas = []
+
+        # guardar la cabecera de la tabla
+        headers = [self.view.tablaCotizaciones.heading(col)["text"] for col in self.view.tablaCotizaciones["columns"]]
+        filas.append('\t'.join(headers))
+
+        for item in self.view.tablaCotizaciones.get_children():
+            values = self.view.tablaCotizaciones.item(item)["values"]
+            row = '\t'.join(str(value) for value in values)
+            filas.append(row)
+
+        clipboard_data = '\n'.join(filas)
+
+        # copiar al portapapeles
+        self.view.clipboard_clear()
+        self.view.clipboard_append(clipboard_data)
+        self.view.update()  # mantiene el clipboard despues de salir del form
+        print("Data de COtizacion guardada en el portapapeles")

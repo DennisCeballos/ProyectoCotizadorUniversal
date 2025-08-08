@@ -150,6 +150,19 @@ class CotizadorView(tk.Tk):
             fill="#000000",
             font=("IstokWeb Regular", 12 * -1)
         )
+
+        self.btnCopiar = Button(
+            text="Copiar al Portapapeles",
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("btnCopiar al Portapapeles"),
+            relief="flat"
+        )
+        self.btnCopiar.place(
+            x=40.0, y=745.0,
+            width=200.0, height=30.0
+        )
+
         self.btnExportar = Button(
             text="Exportar Excel",
             borderwidth=0,
@@ -158,7 +171,7 @@ class CotizadorView(tk.Tk):
             relief="flat"
         )
         self.btnExportar.place(
-            x=40.0, y=745.0,
+            x=255.0, y=745.0,
             width=200.0, height=30.0
         )
         
@@ -183,5 +196,8 @@ class CotizadorView(tk.Tk):
     def set_eliminar_callback(self, callback):
         self.btnEliminar.config(command=callback)
     
+    def set_copiar_callback(self, callback):
+        self.btnCopiar.config(command=callback)
+
     def set_exportar_callback(self, callback):
         self.btnExportar.config(command=callback)
