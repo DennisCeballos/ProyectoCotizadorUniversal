@@ -1,9 +1,9 @@
 # main.py
-from views.main_view import MainView
+from views.cotizador_view import CotizadorView
 from presenters.cotizacion_presenter import CotizacionPresenter
 
 def main():
-    view = MainView()
+    view = CotizadorView()
     cotizacion_presenter = CotizacionPresenter(view)
     cotizacion_presenter.cargar_datos()
 
