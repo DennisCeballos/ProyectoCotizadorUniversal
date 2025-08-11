@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk, Button, Canvas
-from models.Utils import SearchableComboBox
 
 class CotizadorView(tk.Tk):
     def __init__(self):
