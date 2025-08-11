@@ -50,6 +50,7 @@ class CotizacionPresenter:
         self.view.set_agregar_callback(self.on_agregar)
         self.view.set_copiar_callback(self.on_copiarPortapapeles)
         self.view.set_exportar_callback(self.on_exportarExcel)
+        self.view.set_eliminar_callback(self.on_eliminar)
 
     def on_buscar(self):
         #* Generar la lista de opciones similares a la palabra a Buscar
@@ -136,6 +137,23 @@ class CotizacionPresenter:
 
         #insertar los datos en la tabla final
         self.view.tablaCotizaciones.insert("", 'end',values=seleccion) # type: ignore
+    
+    def on_eliminar(self):
+        # Verificar que se ha seleccionado alguna opcion
+        try:
+            seleccion = self.view.tablaCotizaciones.selection()[0]
+        except IndexError:
+             print("No se ha seleccionado ninguna opcion")
+             return
+        
+        # proceso necesario para obtener el valor como tal
+        #seleccion = self.view.tablaCotizaciones.item(seleccion)
+        #seleccion = seleccion.get("values")
+        print("Eliminando de Cotizacion: ")
+        print(seleccion)
+
+        # eliminar dicho dato de la tabla final
+        self.view.tablaCotizaciones.delete(seleccion) # type: ignore
 
     def on_copiarPortapapeles(self):
         filas = []

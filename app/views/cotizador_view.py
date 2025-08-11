@@ -70,9 +70,9 @@ class CotizadorView(tk.Tk):
         self.tablaOpciones["columns"] = ["descripcion", "precio", "origen"]
 
         #self.tablaOpciones.column("#0")
-        self.tablaOpciones.column("descripcion", width=300, minwidth=200)
-        self.tablaOpciones.column("precio", minwidth=10, width=70-1)
-        self.tablaOpciones.column("origen", minwidth=50, width=95-1)
+        self.tablaOpciones.column("descripcion", width=300)
+        self.tablaOpciones.column("precio", width=70-1)
+        self.tablaOpciones.column("origen", width=95-1)
 
         #self.tablaOpciones.heading("#0", text="#")
         self.tablaOpciones.heading("descripcion", text="Nombre")
@@ -112,9 +112,9 @@ class CotizadorView(tk.Tk):
         self.tablaCotizaciones["columns"] = ["descripcion", "precio", "origen"]
 
         #self.tablaOpciones.column("#0")
-        self.tablaCotizaciones.column("descripcion", width=300, minwidth=350)
-        self.tablaCotizaciones.column("precio", minwidth=10, width=90)
-        self.tablaCotizaciones.column("origen", minwidth=50, width=120-1)
+        self.tablaCotizaciones.column("descripcion", width=300)
+        self.tablaCotizaciones.column("precio", width=90)
+        self.tablaCotizaciones.column("origen", width=120-1)
 
         #self.tablaOpciones.heading("#0", text="#")
         self.tablaCotizaciones.heading("descripcion", text="Nombre")
@@ -191,9 +191,14 @@ class CotizadorView(tk.Tk):
     
     def set_agregar_callback(self, callback):
         self.btnAgregar.config(command=callback)
+        self.tablaOpciones.bind('<Double 1>', lambda x: callback())
+        self.tablaOpciones.bind('<Return>', lambda x: callback())
     
     def set_eliminar_callback(self, callback):
         self.btnEliminar.config(command=callback)
+        self.tablaCotizaciones.bind('<Return>', lambda x: callback())
+        self.tablaCotizaciones.bind('<Delete>', lambda x: callback())
+        self.tablaCotizaciones.bind('<BackSpace>', lambda x: callback())
     
     def set_copiar_callback(self, callback):
         self.btnCopiar.config(command=callback)
