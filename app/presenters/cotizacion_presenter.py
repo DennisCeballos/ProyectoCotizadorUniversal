@@ -24,12 +24,13 @@ class CotizacionPresenter:
         #* Cargar pandas dataframe para cada fuente de datos *
 
         # obtener la lista de ARCHIVOS de tipo excel
-        current_path = str(os.path.dirname(os.path.realpath(__file__)))
+        #current_path = str(os.path.dirname(os.path.realpath(__file__)))
+        current_path = Utils.get_base_path()
         print(current_path)
-        current_path = current_path[: current_path.rfind('\\')]
-        print(current_path)
-        current_path = current_path[: current_path.rfind('\\')]
-        print(current_path)
+        #current_path = current_path[: current_path.rfind('\\')]
+        #print(current_path)
+        #current_path = current_path[: current_path.rfind('\\')]
+        #print(current_path)
         archivos = os.listdir(current_path)
         archivos = [f for f in archivos if os.path.isfile(current_path+'/'+f)]
         archivos_excel = ["\\".join( [current_path,f] ) for f in archivos if f.lower().find(".xls")>0 ] # solo archivos que tengan la extension xls
